@@ -715,10 +715,11 @@ class StateMachine(object):
         is_existing = old_state is not None
         same_state = (is_existing and old_state.state == new_state and
                       not force_update)
-        same_attr = is_existing and old_state.attributes == attributes
-
-        if same_state and same_attr:
-            return
+        same_attr = is_existing and old_state.attributes == attributes 
+        if same_state:
+            old_state.last_updated= dt_util.utcnow()
+            if same_attr:
+                return
 
         last_changed = old_state.last_changed if same_state else None
         state = State(entity_id, new_state, attributes, last_changed)
